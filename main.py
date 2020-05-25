@@ -99,7 +99,7 @@ def main():
             samples = samples.view(batch_size * 10, 1, 28, 28)
             out_x = model(imgs)  # [N, 10]
             out_z = model(samples).view(batch_size, 10, out_x.size(-1))  # [N * 10 , 2]
-            loss = criterion(out_x, targets, out_z, is_known, 1, 1)
+            loss = criterion(out_x, targets, out_z, is_known, 10, 1)
 
             optimizer.zero_grad()
             loss.backward()
