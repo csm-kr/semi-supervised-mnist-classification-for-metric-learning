@@ -43,7 +43,7 @@ def main():
 
     train_set = SEMI_MNIST(train_set,
                            transform=transform,
-                           num_samples=10)
+                           num_samples=600)
 
     train_set = SAMPLE_MNIST(train_set,
                              transform=transform)
@@ -86,11 +86,11 @@ def main():
     # 10. resume
     if opts.resume:
         model.load_state_dict(torch.load('./saves/exp_2_state_dict.{}'.format(opts.resume)))
-        print("resume from {} epoch..".format(opts.resume))
+        print("resume from {} epoch..".format(opts.resume - 1))
     else:
         print("no checkpoint to resume.. train from scratch.")
     # --
-    for epoch in range(opts.resume + 1, opts.epoch):
+    for epoch in range(opts.resume, opts.epoch):
         # 11. trian
         for idx, (imgs, targets) in enumerate(train_loader):
             model.train()

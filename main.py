@@ -42,7 +42,7 @@ def main():
 
     train_set = SEMI_MNIST(train_set,
                            transform=transform,
-                           num_samples=10)
+                           num_samples=600)
 
     test_set = MNIST('./data/MNIST',
                      train=False,
@@ -74,22 +74,18 @@ def main():
                                 momentum=0.9,
                                 weight_decay=5e-5)
 
-    # optimizer = optim.Adam(params=model.parameters(),
-    #                        lr=opts.lr,
-    #                        weight_decay=5e-5)
-
     # 9. scheduler
     scheduler = StepLR(optimizer=optimizer,
                        step_size=10,
                        gamma=0.5)
     # 10. resume
     if opts.resume:
-        model.load_state_dict(torch.load('./saves/exp_2_state_dict.{}'.format(opts.resume)))
-        print("resume from {} epoch..".format(opts.resume))
+        model.load_state_dict(torch.load('./saves/state_dict.{}'.format(opts.resume)))
+        print("resume from {} epoch..".format(opts.resume - 1))
     else:
         print("no checkpoint to resume.. train from scratch.")
     # --
-    for epoch in range(opts.resume + 1, opts.epoch):
+    for epoch in range(opts.resume, opts.epoch):
         # 11. trian
         for idx, (imgs, targets, samples, is_known) in enumerate(train_loader):
             model.train()
@@ -129,14 +125,14 @@ def main():
                               loss,
                               lr))
 
-        torch.save(model.state_dict(), './saves/exp_2_state_dict.{}'.format(epoch))
+        torch.save(model.state_dict(), './saves/state_dict.{}'.format(epoch))
 
         # 12. test
         correct = 0
         avg_loss = 0
         for idx, (img, target) in enumerate(test_loader):
 
-            model.load_state_dict(torch.load('./saves/exp_2_state_dict.{}'.format(epoch)))
+            model.load_state_dict(torch.load('./saves/state_dict.{}'.format(epoch)))
             model.eval()
             img = img.to(device)         # [N, 1, 28, 28]
             target = target.to(device)   # [N]
