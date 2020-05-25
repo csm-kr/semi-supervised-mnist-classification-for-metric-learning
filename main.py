@@ -41,7 +41,8 @@ def main():
                       transform=None)
 
     train_set = SEMI_MNIST(train_set,
-                           transform=transform)
+                           transform=transform,
+                           num_samples=10)
 
     test_set = MNIST('./data/MNIST',
                      train=False,
@@ -141,7 +142,7 @@ def main():
             target = target.to(device)   # [N]
             output = model(img)          # [N, 10]
 
-            # output = torch.softmax(output, -1)
+            output = torch.softmax(output, -1)
             pred, idx_ = output.max(-1)
             print(idx_)
             correct += torch.eq(target, idx_).sum()
