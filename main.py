@@ -16,9 +16,9 @@ def main():
     # 1. argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--epoch', type=int, default=50)
-    parser.add_argument('--lr', type=float, default=1e-6)
-    parser.add_argument('--batch_size', type=int, default=32)
-    parser.add_argument('--resume', type=int, default=13)
+    parser.add_argument('--lr', type=float, default=1e-5)
+    parser.add_argument('--batch_size', type=int, default=16)
+    parser.add_argument('--resume', type=int, default=0)
     opts = parser.parse_args()
     print(opts)
 
@@ -83,7 +83,7 @@ def main():
                        gamma=0.5)
     # 10. resume
     if opts.resume:
-        model.load_state_dict(torch.load('./saves/state_dict.{}'.format(opts.resume)))
+        model.load_state_dict(torch.load('./saves/exp_2_state_dict.{}'.format(opts.resume)))
         print("resume from {} epoch..".format(opts.resume))
     else:
         print("no checkpoint to resume.. train from scratch.")
@@ -128,14 +128,14 @@ def main():
                               loss,
                               lr))
 
-        torch.save(model.state_dict(), './saves/state_dict.{}'.format(epoch))
+        torch.save(model.state_dict(), './saves/exp_2_state_dict.{}'.format(epoch))
 
         # 12. test
         correct = 0
         avg_loss = 0
         for idx, (img, target) in enumerate(test_loader):
 
-            model.load_state_dict(torch.load('./saves/state_dict.{}'.format(epoch)))
+            model.load_state_dict(torch.load('./saves/exp_2_state_dict.{}'.format(epoch)))
             model.eval()
             img = img.to(device)         # [N, 1, 28, 28]
             target = target.to(device)   # [N]
