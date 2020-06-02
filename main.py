@@ -53,7 +53,7 @@ def main():
     train_loader = DataLoader(dataset=train_set,
                               shuffle=True,
                               batch_size=opts.batch_size,
-                              num_workers=4,
+                              num_workers=2,
                               pin_memory=True
                               )
 
@@ -72,11 +72,11 @@ def main():
     optimizer = torch.optim.SGD(params=model.parameters(),
                                 lr=opts.lr,
                                 momentum=0.9,
-                                weight_decay=5e-5)
+                                weight_decay=5e-4)
 
     # 9. scheduler
     scheduler = StepLR(optimizer=optimizer,
-                       step_size=10,
+                       step_size=15,
                        gamma=0.5)
     # 10. resume
     if opts.resume:
@@ -84,8 +84,10 @@ def main():
         print("resume from {} epoch..".format(opts.resume - 1))
     else:
         print("no checkpoint to resume.. train from scratch.")
+
     # --
     for epoch in range(opts.resume, opts.epoch):
+
         # 11. trian
         for idx, (imgs, targets, samples, is_known) in enumerate(train_loader):
             model.train()
