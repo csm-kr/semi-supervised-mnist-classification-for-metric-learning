@@ -41,6 +41,8 @@ class MetricCrossEntropy(nn.Module):
         batch_size = x.size(0)
 
         m_softmax = self.metric_soft_max(x, z)  # [N, 10]
+        m_softmax = torch.pow(m_softmax, 3)
+        m_softmax_ = torch.pow(1 - m_softmax, 2)
         known = k.unsqueeze(-1)
         unknown = (1-k).unsqueeze(-1)
 
@@ -50,7 +52,7 @@ class MetricCrossEntropy(nn.Module):
         label = one_hot * known
         pred_label = m_softmax * unknown
 
-        unlabel_loss = -1 * (pred_label * torch.log(m_softmax)).sum(dim=1)
+        unlabel_loss = -1 * (m_softmax_ * pred_label * torch.log(m_softmax)).sum(dim=1)
         label_loss = -1 * (label * torch.log(F.softmax(x, dim=1))).sum(dim=1)
 
         loss = lambda_1 * label_loss + lambda_2 * unlabel_loss

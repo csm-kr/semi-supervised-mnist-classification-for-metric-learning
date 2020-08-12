@@ -39,7 +39,7 @@ class SEMI_MNIST(Dataset):
 
         images = images.float().div(255).unsqueeze(0)
 
-        sample_idx_r = np.random.randint(self.num_samples, size=10)  #
+        sample_idx_r = np.random.randint(self.num_samples, size=10)  # idx
         samples_idx = np.ndarray([10])
 
         # get the samples for uniform distributions
@@ -79,7 +79,7 @@ if __name__ == '__main__':
                       train=True,
                       download=True)
 
-    train_set = SEMI_MNIST(train_set, transform=transform)
+    train_set = SEMI_MNIST(train_set, transform=transform, num_samples=100)
     from torch.utils.data import DataLoader
     train_loader = DataLoader(train_set,
                               batch_size=2,
@@ -92,25 +92,25 @@ if __name__ == '__main__':
         print(samples.type(), samples.size())
         print(is_known.type(), is_known.size())
 
-        import cv2
-        import matplotlib.pyplot as plt
-        # 1. img val
-        img_numpy = img[0].squeeze().numpy()
-        plt.imshow(img_numpy, cmap='Greys')
-        plt.show()
-        # cv2.imshow('output', img_numpy)
-
-        # 2. target val
-        print(targets[0].item())
-
-        # 3. sample val
-        samples = samples.numpy()
-        fig1 = plt.figure(1)
-        for i in range(10):
-            plt.subplot(2, 5, i + 1)
-            plt.imshow(samples[0][i], cmap='Greys')
-        plt.show()
-        cv2.waitKey(0)
+        # import cv2
+        # import matplotlib.pyplot as plt
+        # # 1. img val
+        # img_numpy = img[0].squeeze().numpy()
+        # plt.imshow(img_numpy, cmap='Greys')
+        # plt.show()
+        # # cv2.imshow('output', img_numpy)
+        #
+        # # 2. target val
+        # print(targets[0].item())
+        #
+        # # 3. sample val
+        # samples = samples.numpy()
+        # fig1 = plt.figure(1)
+        # for i in range(10):
+        #     plt.subplot(2, 5, i + 1)
+        #     plt.imshow(samples[0][i], cmap='Greys')
+        # plt.show()
+        # cv2.waitKey(0)
 
 
 

@@ -15,7 +15,7 @@ from loss import MetricCrossEntropy
 def main():
     # 1. argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epoch', type=int, default=50)
+    parser.add_argument('--epoch', type=int, default=100)
     parser.add_argument('--lr', type=float, default=1e-5)
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--resume', type=int, default=0)
@@ -42,7 +42,7 @@ def main():
 
     train_set = SEMI_MNIST(train_set,
                            transform=transform,
-                           num_samples=600)
+                           num_samples=100)
 
     test_set = MNIST('./data/MNIST',
                      train=False,
@@ -53,7 +53,7 @@ def main():
     train_loader = DataLoader(dataset=train_set,
                               shuffle=True,
                               batch_size=opts.batch_size,
-                              num_workers=2,
+                              num_workers=8,
                               pin_memory=True
                               )
 
@@ -76,7 +76,7 @@ def main():
 
     # 9. scheduler
     scheduler = StepLR(optimizer=optimizer,
-                       step_size=15,
+                       step_size=50,
                        gamma=0.5)
     # 10. resume
     if opts.resume:
@@ -107,17 +107,10 @@ def main():
             loss.backward()
             optimizer.step()
 
-            vis.line(X=torch.ones((1, 1)) * idx + epoch * len(train_loader),
-                     Y=torch.Tensor([loss]).unsqueeze(0),
-                     update='append',
-                     win='loss',
-                     opts=dict(x_label='step',
-                               y_label='loss',
-                               title='loss',
-                               legend=['total_loss']))
             for param_group in optimizer.param_groups:
                 lr = param_group['lr']
-            if idx % 10 == 0:
+
+            if idx % 100 == 0:
                 print('Epoch : {}\t'
                       'step : [{}/{}]\t'
                       'loss : {}\t'
@@ -126,6 +119,15 @@ def main():
                               idx, len(train_loader),
                               loss,
                               lr))
+
+                vis.line(X=torch.ones((1, 1)) * idx + epoch * len(train_loader),
+                         Y=torch.Tensor([loss]).unsqueeze(0),
+                         update='append',
+                         win='loss',
+                         opts=dict(x_label='step',
+                                   y_label='loss',
+                                   title='loss',
+                                   legend=['total_loss']))
 
         torch.save(model.state_dict(), './saves/state_dict.{}'.format(epoch))
 
