@@ -42,7 +42,7 @@ class MetricCrossEntropy(nn.Module):
 
         m_softmax = self.metric_soft_max(x, z)  # [N, 10]
         m_softmax = torch.pow(m_softmax, 3)
-        m_softmax_ = torch.pow(1 - m_softmax, 2)
+        m_softmax_ = torch.pow(1 - m_softmax, 3)
         known = k.unsqueeze(-1)
         unknown = (1-k).unsqueeze(-1)
 

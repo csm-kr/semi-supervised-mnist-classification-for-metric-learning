@@ -16,7 +16,7 @@ def main():
     # 1. argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--epoch', type=int, default=100)
-    parser.add_argument('--lr', type=float, default=1e-5)
+    parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--resume', type=int, default=0)
     opts = parser.parse_args()
@@ -77,7 +77,7 @@ def main():
     # 9. scheduler
     scheduler = StepLR(optimizer=optimizer,
                        step_size=50,
-                       gamma=0.5)
+                       gamma=1)
     # 10. resume
     if opts.resume:
         model.load_state_dict(torch.load('./saves/state_dict.{}'.format(opts.resume)))
