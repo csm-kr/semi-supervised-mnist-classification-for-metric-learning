@@ -9,6 +9,9 @@ pred/
 gt/
 results/
 
+# numpy
+*.npy
+
 # pycharm IDE
 __pycache__/
 *.py[cod]
